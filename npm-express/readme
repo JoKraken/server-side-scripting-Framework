@@ -1,0 +1,3 @@
+start: node index.js OR nodemon
+
+to see: http://localhost:3000/
