@@ -1,24 +1,15 @@
 'use strict';
+const schema = require('./src/schema');
+const GPS = require('gps');
+
+var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const express = require('express');
 const app = express();
+const fs = require('fs');
 
-app.use(express.static('front'));
-
-const catSchema = new Schema({
-    name:  String,
-    age: Number,
-    gender:   {
-        type: String,
-        enum : ['female','male'],
-        default: 'female'
-        },
-    colour: String,
-    weight: Number
-});
-
-const Cat = mongoose.model('Cat', catSchema);
+//app.use(express.static('front'));
 
 mongoose.connect('mongodb://localhost:27017/test').then(() => {
     console.log('Connected successfully.');
@@ -29,39 +20,44 @@ mongoose.connect('mongodb://localhost:27017/test').then(() => {
 });
 
 app.get('/', (req, res) => {
-    Cat.create({
-        name:  "citty",
-        age: 4,
-        gender:   "femal",
-        colour: "black",
-        weight: 22
+    schema.Data.find().then(data => {
+        console.log(`Got ${data.length} data`);
+        res.sendFile(__dirname + '/front/index.html' );
+    });
+});
+
+
+app.get('/add', (req, res) => {
+    res.sendFile( __dirname + '/front/add.html');
+});
+
+app.use(bodyParser.json());       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+    extended: true
+}));
+
+app.post('/submit-form', (req, res) => {
+    console.log('/submit-form');
+    var temp = JSON.stringify(req.body);
+
+    var gps = new GPS;
+
+    gps.on('data', function(data) {
+        console.log(data);
+        console.log(gps.state);
+    });
+
+    /*schema.Data.create({
+        category: temp.cato,
+        title: temp.title,
+        details: temp.des,
+        coordinates: {
+            lat: Number,
+            lng: Number
+        },
+        image: temp.file
     }).then(post => {
-        console.log(post.id);
         res.send("Created! id: "+ post.id);
-    });
-});
-
-app.get('/all', (req, res) => {
-    Cat.find().then(cats => {
-        console.log(`Got ${cats.length} cats`);
-        res.send(cats);
-    });
-});
-
-//get mal cats over 10kg & older than 10
-app.get('/cats', (req, res) => {
-    Cat.find().then(cats => {
-        console.log(`Got ${cats.length} cats`);
-        res.send(cats);
-    });
-});
-
-//create cats
-app.post('/create', (req, res) => {
-    console.log('post create');
-});
-//create cats
-app.get('/create', (req, res) => {
-    console.log('get create' + req.toString());
-    res.sendStatus(200);
+    });*/
+    res.send("/submit-form");
 });
