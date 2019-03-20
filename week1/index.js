@@ -1,4 +1,6 @@
 'use strict';
+require('dotenv').config();
+
 const schema = require('./src/schema');
 const GPS = require('gps');
 
@@ -11,10 +13,11 @@ const fs = require('fs');
 
 //app.use(express.static('front'));
 
-mongoose.connect('mongodb://localhost:27017/test').then(() => {
+
+mongoose.connect('mongodb://'+process.env.DB_HOST+':'+process.env.DB_PORT+'/test').then(() => {
     console.log('Connected successfully.');
 
-    app.listen(3000);
+    app.listen(process.env.APP_PORT);
 }, err => {
     console.log('Connection to db failed: ' + err);
 });
