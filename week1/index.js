@@ -34,8 +34,7 @@ app.delete('/delete', function (req, res) {
     schema.Data.remove({"title": ""});
 
     res.sendStatus(200);
-})
-
+});
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies

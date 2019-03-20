@@ -1,6 +1,7 @@
 var app = angular.module('myApp', []);
 
 app.controller('showCtrl', function($scope) {
+    $scope.all = [];
     $scope.data = [];
 
 
@@ -11,7 +12,8 @@ app.controller('showCtrl', function($scope) {
     Http.onreadystatechange= (e)=>{
         if(Http.response != ""){
             $scope.data = angular.copy(JSON.parse(Http.response));
-            //console.log($scope.data);
+            $scope.all = angular.copy(JSON.parse(Http.response));
+            console.log($scope.data);
             $scope.$apply();
         }
     };
@@ -26,5 +28,21 @@ app.controller('showCtrl', function($scope) {
                 console.log(Http.status);
             }
         };
+    };
+
+    $scope.pressTitle = function(id) {
+        console.log(id);
+        if(id == undefined){
+            $scope.data = $scope.all;
+        }else{
+            $scope.data = [];
+            $scope.all.forEach(function (one) {
+                if(id == one._id) $scope.data.push(one);
+            });
+        }
+    };
+
+    $scope.view = function(id) {
+        console.log(id);
     };
 });
