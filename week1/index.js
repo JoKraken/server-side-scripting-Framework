@@ -11,8 +11,7 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 
-//app.use(express.static('front'));
-
+app.use(express.static('front'));
 
 mongoose.connect('mongodb://'+process.env.DB_HOST+':'+process.env.DB_PORT+'/test').then(() => {
     console.log('Connected successfully.');
@@ -22,17 +21,15 @@ mongoose.connect('mongodb://'+process.env.DB_HOST+':'+process.env.DB_PORT+'/test
     console.log('Connection to db failed: ' + err);
 });
 
-app.get('/', (req, res) => {
+//send all the Data back
+app.get('/all', (req, res) => {
     schema.Data.find().then(data => {
+        console.log(data);
         console.log(`Got ${data.length} data`);
-        res.sendFile(__dirname + '/front/index.html' );
+        res.json(data);
     });
 });
 
-
-app.get('/add', (req, res) => {
-    res.sendFile( __dirname + '/front/add.html');
-});
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
@@ -43,24 +40,25 @@ app.post('/submit-form', (req, res) => {
     console.log('/submit-form');
     var temp = JSON.stringify(req.body);
 
+    /*
     var gps = new GPS;
 
     gps.on('data', function(data) {
         console.log(data);
         console.log(gps.state);
-    });
+    });*/
 
-    /*schema.Data.create({
+    schema.Data.create({
         category: temp.cato,
         title: temp.title,
         details: temp.des,
         coordinates: {
-            lat: Number,
-            lng: Number
+            lat: 0,
+            lng: 0
         },
         image: temp.file
     }).then(post => {
         res.send("Created! id: "+ post.id);
-    });*/
-    res.send("/submit-form");
+    });
+    //res.sendFile("/submit-form");
 });
