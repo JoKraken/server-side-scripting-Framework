@@ -30,6 +30,12 @@ app.get('/all', (req, res) => {
     });
 });
 
+app.delete('/delete', function (req, res) {
+    schema.Data.remove({"title": ""});
+
+    res.sendStatus(200);
+})
+
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
@@ -48,6 +54,7 @@ app.post('/submit-form', (req, res) => {
         console.log(gps.state);
     });*/
 
+    console.log(temp);
     schema.Data.create({
         category: temp.cato,
         title: temp.title,
@@ -58,7 +65,7 @@ app.post('/submit-form', (req, res) => {
         },
         image: temp.file
     }).then(post => {
-        res.send("Created! id: "+ post.id);
+        res.sendFile(__dirname + "/front/index.html");
     });
     //res.sendFile("/submit-form");
 });

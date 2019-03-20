@@ -3,17 +3,17 @@ const Schema = mongoose.Schema;
 
 const dataSchema = new Schema({
     time: { type: Date, default: Date.now },
-    category: String,
-    title: String,
-    details: String,
+    category: { type: String, default: '' },
+    title: { type: String, default: '' },
+    details: { type: String, default: '' },
     coordinates: {
         lat: Number,
         lng: Number
     },
-    thumbnail: String,
-    image: String,
-    original: String
+    thumbnail: { type: String, default: '' },
+    image: { type: String, default: '' },
+    original: { type: String, default: '' }
 });
 
-const Data = mongoose.model('Data', dataSchema);
+const Data = mongoose.model('Test', dataSchema);
 exports.Data = Data;
