@@ -1,6 +1,7 @@
 var app = angular.module('myApp', []);
 
 app.controller('showCtrl', function($scope) {
+    $scope.cato = [];
     $scope.all = [];
     $scope.data = [];
 
@@ -13,6 +14,13 @@ app.controller('showCtrl', function($scope) {
         if(Http.response != ""){
             $scope.data = angular.copy(JSON.parse(Http.response));
             $scope.all = angular.copy(JSON.parse(Http.response));
+            $scope.data.forEach(function (one) {
+                var temp = true;
+                $scope.cato.forEach(function (two) {
+                    if(one.category == two.category) temp = false;
+                });
+                if(temp) $scope.cato.push(one);
+            });
             console.log($scope.data);
             $scope.$apply();
         }
@@ -30,14 +38,14 @@ app.controller('showCtrl', function($scope) {
         };
     };
 
-    $scope.pressTitle = function(id) {
-        console.log(id);
-        if(id == undefined){
+    $scope.pressTitle = function(cato) {
+        console.log(cato);
+        if(cato == undefined){
             $scope.data = $scope.all;
         }else{
             $scope.data = [];
             $scope.all.forEach(function (one) {
-                if(id == one._id) $scope.data.push(one);
+                if(cato == one.category) $scope.data.push(one);
             });
         }
     };
@@ -46,7 +54,7 @@ app.controller('showCtrl', function($scope) {
         console.log(id);
         $scope.all.forEach(function (item) {
             if(id == item._id) {
-                document.querySelector('.modal-body img').src = item.image;
+                document.querySelector('.modal-body img').src = 'uploads/'+item.image;
                 document.querySelector('.modal-title').innerHTML = item.title;
                 /*resetMap(item);
                 document.querySelector('#map').addEventListener('transitionend', () => {

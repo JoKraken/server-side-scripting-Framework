@@ -2,9 +2,9 @@
 require('dotenv').config();
 
 const schema = require('./src/schema');
-const GPS = require('gps');
-var multer = require('multer')
-var upload = multer({dest: 'front/uploads/'})
+var multer = require('multer');
+var upload = multer({dest: 'front/uploads/'});
+const sharp = require('sharp');
 
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -19,7 +19,6 @@ app.use(function (req, res, next) {
     next();
 });
 app.use(express.static('front'));
-//app.use(express.static('uploads'));
 
 
 mongoose.connect('mongodb://' + process.env.DB_HOST + ':' + process.env.DB_PORT + '/test').then(() => {
@@ -39,7 +38,9 @@ app.get('/all', (req, res) => {
 });
 
 app.delete('/delete', function (req, res) {
-    schema.Data.remove({"title": ""});
+    schema.Data.remove({delete: false}, function (err) {
+        console.log();
+    });
 
     res.sendStatus(200);
 });
@@ -50,7 +51,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 }));
 
 app.post('/submit-form', upload.single('image'), (req, res) => {
-    console.log(req.file);
+    //console.log(req.file);
     var temp = req.body;
 
     schema.Data.create({
@@ -61,11 +62,11 @@ app.post('/submit-form', upload.single('image'), (req, res) => {
             lat: 0,
             lng: 0
         },
-        image: req.file.filename
+        image: (req.file == undefined) ? "" : req.file.filename
     }).then(post => {
         console.log(post);
 
-        
+
 
         res.sendFile(__dirname + "/front/index.html");
     });
