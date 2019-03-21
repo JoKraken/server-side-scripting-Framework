@@ -11,22 +11,22 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
-<body>
+<body ng-app="myApp" ng-controller="showCtrl" >
 
-<div  ng-app="myApp" class="container">
+<div class="container">
     <div class="row">
         <div class="col">
             <ul class="nav nav-tabs" id="myTabs">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/">View</a>
+                    <a class="nav-link active" href="./">View</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/add.html">Add</a>
+                    <a class="nav-link" href="add.html">Add</a>
                 </li>
             </ul>
         </div>
     </div>
-    <div  ng-controller="showCtrl"  class="tab-content">
+    <div class="tab-content">
         <div class="tab-pane active" id="home" role="tabpanel">
             <div class="row">
                 <div class="col">
@@ -44,14 +44,14 @@
                 <div id="content" class="col ">
                     <div class="card-deck">
                         <div class="card-deck">
-                            <article class="card" ng-repeat="data in data">
-                                <img class="card-img-top" src="{{data.image}}" alt="">
+                            <article class="card cardAround" ng-repeat="data in data">
+                                <img class="card-img-top" src="uploads/{{data.image}}" alt="">
                                 <div class="card-block">
                                     <h3 class="card-title">{{data.title}}</h3>
-                                    <p class="card-text"><small>{{data.time | date: "dd.MM.yyyy, HH:mm"}}</small></p><p class="card-text">{{data.des}}</p>
+                                    <p class="card-text"><small>{{data.time | date: "dd.MM.yyyy, HH:mm"}}</small></p><p class="card-text">{{data.details}}</p>
                                 </div>
                                 <div class="card-footer">
-                                    <p><button class="btn btn-primary"  ng-click="view(data._id)">View</button></p>
+                                    <p><button class="btn btn-primary" ng-click="view(data._id)">View</button></p>
                                 </div>
                             </article>
                         </div>
@@ -61,6 +61,27 @@
         </div>
     </div>
 </div>
+
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="close()"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Map</h4>
+            </div>
+            <div class="modal-body">
+                <figure>
+                    <img src="" alt="">
+                    <div id="map" class="small-map"></div>
+                </figure>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="close()">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 </body>
 </html>
