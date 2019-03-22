@@ -1,6 +1,10 @@
 'use strict';
+require('dotenv').config();
+
 const schema = require('./src/schema');
-const GPS = require('gps');
+var multer = require('multer');
+var upload = multer({dest: 'front/uploads/'});
+const sharp = require('sharp');
 
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -9,26 +13,35 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 
-//app.use(express.static('front'));
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+app.use(express.static('front'));
 
-mongoose.connect('mongodb://localhost:27017/test').then(() => {
+
+mongoose.connect('mongodb://'+ process.env.DB_User +':'+ process.env.DB_PWD + '@'+ process.env.DB_HOST + ':' + process.env.DB_PORT + '/test').then(() => {
     console.log('Connected successfully.');
-
-    app.listen(3000);
+    app.listen(process.env.APP_PORT);
 }, err => {
     console.log('Connection to db failed: ' + err);
 });
 
-app.get('/', (req, res) => {
+//send all the Data back
+app.get('/all', (req, res) => {
     schema.Data.find().then(data => {
-        console.log(`Got ${data.length} data`);
-        res.sendFile(__dirname + '/front/index.html' );
+        //console.log(data);
+        res.json(data);
     });
 });
 
+app.delete('/delete', function (req, res) {
+    schema.Data.remove({delete: false}, function (err) {
+        console.log();
+    });
 
-app.get('/add', (req, res) => {
-    res.sendFile( __dirname + '/front/add.html');
+    res.sendStatus(200);
 });
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
@@ -36,28 +49,32 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
 }));
 
-app.post('/submit-form', (req, res) => {
-    console.log('/submit-form');
-    var temp = JSON.stringify(req.body);
+app.post('/submit-form', upload.single('image'), (req, res) => {
+    //console.log(req.file);
+    var temp = req.body;
 
-    var gps = new GPS;
-
-    gps.on('data', function(data) {
-        console.log(data);
-        console.log(gps.state);
-    });
-
-    /*schema.Data.create({
+    schema.Data.create({
         category: temp.cato,
         title: temp.title,
         details: temp.des,
         coordinates: {
-            lat: Number,
-            lng: Number
+            lat: 0,
+            lng: 0
         },
-        image: temp.file
+        image: (req.file == undefined) ? "" : req.file.filename
     }).then(post => {
-        res.send("Created! id: "+ post.id);
-    });*/
-    res.send("/submit-form");
+        //console.log(post);
+
+        if(req.file != undefined) {
+            sharp(req.file.path).resize(320,240).toFile("front/uploads/medium/"+req.file.filename).then(
+                (err, info) =>{
+                    //console.log(err);
+                    res.sendFile(__dirname + "/front/index.html");
+                }
+            );
+        };
+
+
+    });
+    //res.sendFile("/submit-form");
 });

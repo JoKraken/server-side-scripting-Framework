@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
 <body>
@@ -15,10 +14,10 @@
         <div class="col">
             <ul class="nav nav-tabs" id="myTabs">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">View</a>
+                    <a class="nav-link" href="./">View</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="/add">Add</a>
+                    <a class="nav-link active" href="add.html">Add</a>
                 </li>
             </ul>
         </div>
@@ -27,7 +26,7 @@
         <div class="jumbotron">
             <h3>New SpyEvent</h3>
         </div>
-        <form method="POST" action="/submit-form">
+        <form method="POST" action="http://localhost:3000/submit-form" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="cato">Catogory:</label>
                 <input type="text" class="form-control" name="cato" id="cato" placeholder="Enter catogory">
@@ -41,14 +40,10 @@
                 <textarea type="text" class="form-control" name="des" id="des"></textarea>
             </div>
 
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                </div>
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" name="file" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                </div>
+            <div class="form-group">
+                <label for="image">Image</label>
+                <input type="file" class="form-control-file" id="image" name="image" aria-describedby="imageHelp">
+                <small id="imageHelp" class="form-text text-muted">Add image</small>
             </div>
 
             <button type="submit" class="btn btn-default">Submit</button>
