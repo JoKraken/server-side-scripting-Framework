@@ -69,7 +69,7 @@ app.post('/submit-form', upload.single('image'), (req, res) => {
         if(req.file != undefined) {
             sharp(req.file.path).resize(320,240).toFile("front/uploads/medium/"+req.file.filename).then(
                 (err, info) =>{
-                    console.log(err);
+                    //console.log(err);
                     res.sendFile(__dirname + "/front/index.html");
                 }
             );
