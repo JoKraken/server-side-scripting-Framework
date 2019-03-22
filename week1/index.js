@@ -64,11 +64,18 @@ app.post('/submit-form', upload.single('image'), (req, res) => {
         },
         image: (req.file == undefined) ? "" : req.file.filename
     }).then(post => {
-        console.log(post);
+        //console.log(post);
+
+        if(req.file != undefined) {
+            sharp(req.file.path).resize(320,240).toFile("front/uploads/medium/"+req.file.filename).then(
+                (err, info) =>{
+                    console.log(err);
+                    res.sendFile(__dirname + "/front/index.html");
+                }
+            );
+        };
 
 
-
-        res.sendFile(__dirname + "/front/index.html");
     });
     //res.sendFile("/submit-form");
 });
