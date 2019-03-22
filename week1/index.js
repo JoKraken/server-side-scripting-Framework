@@ -21,9 +21,8 @@ app.use(function (req, res, next) {
 app.use(express.static('front'));
 
 
-mongoose.connect('mongodb://' + process.env.DB_HOST + ':' + process.env.DB_PORT + '/test').then(() => {
+mongoose.connect('mongodb://'+ process.env.DB_User +':'+ process.env.DB_PWD + '@'+ process.env.DB_HOST + ':' + process.env.DB_PORT + '/test').then(() => {
     console.log('Connected successfully.');
-
     app.listen(process.env.APP_PORT);
 }, err => {
     console.log('Connection to db failed: ' + err);
