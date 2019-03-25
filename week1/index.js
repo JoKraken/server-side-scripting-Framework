@@ -1,7 +1,9 @@
 'use strict';
 require('dotenv').config();
 
-const schema = require('./src/schema');
+const schema = require('./models/data');
+const dataCon = require('./controllers/dataController');
+
 var multer = require('multer');
 var upload = multer({dest: 'front/uploads/'});
 const sharp = require('sharp');
@@ -30,25 +32,23 @@ mongoose.connect('mongodb://'+ process.env.DB_User +':'+ process.env.DB_PWD + '@
 
 //send all the Data back
 app.get('/all', (req, res) => {
-    schema.Data.find().then(data => {
-        //console.log(data);
-        res.json(data);
+    dataCon.getAllData().then((result) => {
+        res.send(result);
     });
 });
 
 app.delete('/delete/:id', function (req, res) {
     let id = req.params.id;
-    console.log(id);
+    console.log("id: "+id);
     if(id == undefined){
-        schema.Data.remove({delete: false}, function (err) {
-            console.log("all deleted");
+        dataCon.deletDataAll().then((result) => {
+            res.sendStatus(200);
         });
     }else{
-        schema.Data.findByIdAndRemove(id, function (err) {
-            console.log(err);
+        dataCon.deletDataById(id).then((result) => {
+            res.sendStatus(200);
         });
     }
-    res.sendStatus(200);
 });
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
@@ -58,61 +58,16 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 
 app.post('/submit-form', upload.single('image'), (req, res) => {
     console.log("/submit-form");
-    var temp = req.body;
-
-    schema.Data.create({
-        category: temp.cato,
-        title: temp.title,
-        details: temp.des,
-        coordinates: {
-            lat: 0,
-            lng: 0
-        },
-        image: (req.file == undefined) ? "" : req.file.filename
-    }).then(post => {
-        //console.log(post);
-
-        if(req.file != undefined) {
-            sharp(req.file.path).resize(320,240).toFile("front/uploads/medium/"+req.file.filename).then(
-                (err, info) =>{
-                    //console.log(err);
-                    res.sendFile(__dirname + "/front/index.html");
-                }
-            );
-        }else{
-            res.sendFile(__dirname + "/front/index.html");
-        }
+    dataCon.createData(req, res).then((result) => {
+        console.log(result);
+        res.sendFile(__dirname + result);
     });
 });
 
 app.post('/editArticle/:id', upload.single('image'), (req, res) => {
-    var temp = req.body;
-    console.log(temp);
-    console.log(req.params.id);
-
-    let data = {
-        category: temp.cato,
-        title: temp.title,
-        details: temp.des,
-    };
-
-    if(req.file != undefined) data.image= req.file.filename;
-
-    schema.Data.update({
-            _id: req.params.id
-        }, data
-    ).then(post => {
-        console.log(post);
-        if(req.file != undefined) {
-            sharp(req.file.path).resize(320,240).toFile("front/uploads/medium/"+req.file.filename).then(
-                (err, info) =>{
-                    //console.log(err);
-                    res.sendFile(__dirname + "/front/index.html");
-                }
-            );
-        }else{
-            res.sendFile(__dirname + "/front/index.html");
-        }
+    dataCon.editData(req, res).then((result) => {
+        console.log(result);
+        res.sendFile(__dirname + result);
     });
 });
 

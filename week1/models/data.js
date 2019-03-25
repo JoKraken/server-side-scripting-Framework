@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const Data = mongoose.Schema;
 
-const dataSchema = new Schema({
+const dataSchema = new Data({
     time: { type: Date, default: Date.now },
     category: { type: String, default: '' },
     title: { type: String, default: '' },
@@ -16,5 +16,5 @@ const dataSchema = new Schema({
     delete: { type: Boolean, default: false }
 });
 
-const Data = mongoose.model('Test', dataSchema);
-exports.Data = Data;
+const Model = mongoose.model('Test', dataSchema);
+exports.Data = Model;
