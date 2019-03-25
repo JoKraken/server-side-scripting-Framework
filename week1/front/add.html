@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
 <body>
@@ -23,10 +24,7 @@
         </div>
     </div>
     <div class="tab-content">
-        <div class="jumbotron">
-            <h3>New SpyEvent</h3>
-        </div>
-        <form method="POST" action="http://localhost:3000/submit-form" enctype="multipart/form-data">
+        <form method="POST" action="http://localhost:3000/submit-form" enctype="multipart/form-data" style="margin-top: 10px">
             <div class="form-group">
                 <label for="cato">Catogory:</label>
                 <input type="text" class="form-control" name="cato" id="cato" placeholder="Enter catogory">
@@ -46,7 +44,7 @@
                 <small id="imageHelp" class="form-text text-muted">Add image</small>
             </div>
 
-            <button type="submit" class="btn btn-default">Submit</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
 </div>

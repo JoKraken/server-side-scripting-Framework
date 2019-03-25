@@ -38,7 +38,7 @@ app.get('/all', (req, res) => {
 
 app.delete('/delete/:id', function (req, res) {
     let id = req.params.id;
-    console.log(req.params.id);
+    console.log(id);
     if(id == undefined){
         schema.Data.remove({delete: false}, function (err) {
             console.log("all deleted");
@@ -48,8 +48,6 @@ app.delete('/delete/:id', function (req, res) {
             console.log(err);
         });
     }
-
-
     res.sendStatus(200);
 });
 
@@ -59,7 +57,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 }));
 
 app.post('/submit-form', upload.single('image'), (req, res) => {
-    //console.log(req.file);
+    console.log("/submit-form");
     var temp = req.body;
 
     schema.Data.create({
@@ -81,9 +79,40 @@ app.post('/submit-form', upload.single('image'), (req, res) => {
                     res.sendFile(__dirname + "/front/index.html");
                 }
             );
-        };
-
-
+        }else{
+            res.sendFile(__dirname + "/front/index.html");
+        }
     });
-    //res.sendFile("/submit-form");
 });
+
+app.post('/editArticle/:id', upload.single('image'), (req, res) => {
+    var temp = req.body;
+    console.log(temp);
+    console.log(req.params.id);
+
+    let data = {
+        category: temp.cato,
+        title: temp.title,
+        details: temp.des,
+    };
+
+    if(req.file != undefined) data.image= req.file.filename;
+
+    schema.Data.update({
+            _id: req.params.id
+        }, data
+    ).then(post => {
+        console.log(post);
+        if(req.file != undefined) {
+            sharp(req.file.path).resize(320,240).toFile("front/uploads/medium/"+req.file.filename).then(
+                (err, info) =>{
+                    //console.log(err);
+                    res.sendFile(__dirname + "/front/index.html");
+                }
+            );
+        }else{
+            res.sendFile(__dirname + "/front/index.html");
+        }
+    });
+});
+

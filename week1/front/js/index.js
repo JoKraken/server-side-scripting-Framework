@@ -21,7 +21,6 @@ app.controller('showCtrl', function($scope) {
                 });
                 if(temp) $scope.cato.push(one);
             });
-            console.log($scope.data);
             $scope.$apply();
         }
     };
@@ -33,9 +32,38 @@ app.controller('showCtrl', function($scope) {
         Http.send();
         Http.onreadystatechange= (e)=>{
             if(Http.status == 200){
-                console.log(Http.status);
+                if(id != undefined){
+                    console.log($scope.data);
+                    let count = 0;
+                    $scope.data.forEach(function (one) {
+                        if(one._id == id) $scope.data.splice(count, 1);
+                        count++;
+                    });
+                    $scope.all = angular.copy($scope.data);
+                    console.log($scope.data);
+                }else{
+                    $scope.cato = [];
+                    $scope.all = [];
+                    $scope.data = [];
+                }
+                $scope.$apply();
             }
         };
+    };
+
+
+    $scope.edit = function(id) {
+        console.log(id);
+        $scope.all.forEach(function (item) {
+            if(id == item._id) {
+                document.querySelector('form').action = document.querySelector('form').action + "/"+ item._id;
+                console.log(document.querySelector('form').action);
+                document.querySelector('#cato').value = item.category;
+                document.querySelector('#title').value = item.title;
+                document.querySelector('#des').value = item.details;
+                document.querySelector('#editModal').style.display = "block";
+            }
+        });
     };
 
     $scope.pressTitle = function(cato) {
@@ -61,9 +89,9 @@ app.controller('showCtrl', function($scope) {
         });
     };
 
-    $scope.close = function() {
-        console.log("close");
-        document.querySelector('#myModal').style.display = "none";
+    $scope.close = function(id) {
+        console.log(id);
+        document.querySelector('#'+id).style.display = "none";
     };
 });
 
