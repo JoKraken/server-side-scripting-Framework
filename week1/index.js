@@ -36,10 +36,19 @@ app.get('/all', (req, res) => {
     });
 });
 
-app.delete('/delete', function (req, res) {
-    schema.Data.remove({delete: false}, function (err) {
-        console.log();
-    });
+app.delete('/delete/:id', function (req, res) {
+    let id = req.params.id;
+    console.log(req.params.id);
+    if(id == undefined){
+        schema.Data.remove({delete: false}, function (err) {
+            console.log("all deleted");
+        });
+    }else{
+        schema.Data.findByIdAndRemove(id, function (err) {
+            console.log(err);
+        });
+    }
+
 
     res.sendStatus(200);
 });

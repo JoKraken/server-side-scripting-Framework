@@ -26,9 +26,9 @@ app.controller('showCtrl', function($scope) {
         }
     };
 
-    $scope.delete = function() {
+    $scope.delete = function(id) {
         const Http = new XMLHttpRequest();
-        const url='http://localhost:3000/delete';
+        const url='http://localhost:3000/delete/'+ id;
         Http.open("DELETE", url);
         Http.send();
         Http.onreadystatechange= (e)=>{

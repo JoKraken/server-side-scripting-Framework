@@ -53,7 +53,10 @@
                                     <p class="card-text"><small>{{data.time | date: "dd.MM.yyyy, HH:mm"}}</small></p><p class="card-text">{{data.details}}</p>
                                 </div>
                                 <div class="card-footer">
-                                    <p><button class="btn btn-primary" ng-click="view(data._id)">View</button></p>
+                                    <p>
+                                        <button class="btn btn-primary" ng-click="view(data._id)">View</button>
+                                        <button class="btn btn-danger" ng-click="delete(data._id)">delete</button>
+                                    </p>
                                 </div>
                             </article>
                         </div>
