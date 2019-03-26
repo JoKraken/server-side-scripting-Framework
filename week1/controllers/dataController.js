@@ -59,7 +59,7 @@ exports.editData = (req, res) =>  {
     if(req.file != undefined) data.image= req.file.filename;
 
     return schema.Data.update({
-            _id: req.params.id
+            _id: req.query.id
         }, data
     ).then(post => {
         console.log(post);

@@ -64,9 +64,10 @@ app.post('/submit-form', upload.single('image'), (req, res) => {
     });
 });
 
-app.post('/editArticle/:id', upload.single('image'), (req, res) => {
+app.post('/editArticle/', upload.single('image'), (req, res) => {
+    console.log(req.query.id);
     dataCon.editData(req, res).then((result) => {
-        console.log(result);
+        console.log(__dirname);
         res.sendFile(__dirname + result);
     });
 });

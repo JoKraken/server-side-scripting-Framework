@@ -56,7 +56,7 @@ app.controller('showCtrl', function($scope) {
         console.log(id);
         $scope.all.forEach(function (item) {
             if(id == item._id) {
-                document.querySelector('form').action = document.querySelector('form').action + "/"+ item._id;
+                document.querySelector('#editForm').action = document.querySelector('#editForm').action + "?id="+ item._id;
                 console.log(document.querySelector('form').action);
                 document.querySelector('#cato').value = item.category;
                 document.querySelector('#title').value = item.title;
