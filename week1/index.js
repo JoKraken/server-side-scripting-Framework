@@ -13,7 +13,16 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const express = require('express');
 const app = express();
+const https = require('https');
 const fs = require('fs');
+
+const sslkey = fs.readFileSync('ssl-key.pem');
+const sslcert = fs.readFileSync('ssl-cert.pem');
+
+const options = {
+    key: sslkey,
+    cert: sslcert
+};
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -25,10 +34,19 @@ app.use(express.static('front'));
 
 mongoose.connect('mongodb://'+ process.env.DB_User +':'+ process.env.DB_PWD + '@'+ process.env.DB_HOST + ':' + process.env.DB_PORT + '/test').then(() => {
     console.log('Connected successfully.');
-    app.listen(process.env.APP_PORT);
+    //app.listen(process.env.APP_PORT);
+    https.createServer(options, app).listen(process.env.APP_PORT);
 }, err => {
     console.log('Connection to db failed: ' + err);
 });
+
+//redirect to https
+const http = require('http');
+
+http.createServer((req, res) => {
+    res.writeHead(301, { 'Location': 'https://localhost:3000' + req.url });
+    res.end();
+}).listen(8080);
 
 //send all the Data back
 app.get('/all', (req, res) => {
