@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/login.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
@@ -12,7 +15,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col">
+        <div class="col"  style="display: flex; width: 100%">
             <ul class="nav nav-tabs" id="myTabs">
                 <li class="nav-item">
                     <a class="nav-link" href="./">View</a>
@@ -21,8 +24,19 @@
                     <a class="nav-link active" href="add.html">Add</a>
                 </li>
             </ul>
+            <div class="login-container" style="float: right;width: 100%" ng-app="myApp" ng-controller="loginCtrl">
+                <div id="loginForm" style="float: right; display: inline-flex; width: 350px">
+                    <input class="form-control marginRight" type="text" placeholder="Username" id="name">
+                    <input class="form-control marginRight" type="password" placeholder="Password" id="pwd">
+                    <button class="btn btn-primary" type="submit" ng-click="login()">Login</button>
+                </div>
+                <div id="logedIn" style="float: right">
+                    <button class="btn btn-secondary" type="submit" ng-click="logout()">logout</button>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="errorLogin"></div>
     <div class="tab-content">
         <form method="POST" action="http://localhost:3000/submit-form" enctype="multipart/form-data" style="margin-top: 10px">
             <div class="form-group">

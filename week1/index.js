@@ -3,6 +3,7 @@ require('dotenv').config();
 
 const schema = require('./models/data');
 const dataCon = require('./controllers/dataController');
+const userCon = require('./controllers/userController');
 
 var multer = require('multer');
 var upload = multer({dest: 'front/uploads/'});
@@ -25,7 +26,6 @@ const options = {
     key: sslkey,
     cert: sslcert
 };
-
 
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -52,8 +52,8 @@ app.use(express.static('front'));
 
 mongoose.connect('mongodb://'+ process.env.DB_User +':'+ process.env.DB_PWD + '@'+ process.env.DB_HOST + ':' + process.env.DB_PORT + '/test').then(() => {
     console.log('Connected successfully.');
-    //app.listen(process.env.APP_PORT);
-    https.createServer(options, app).listen(process.env.APP_PORT);
+    app.listen(process.env.APP_PORT);
+    //https.createServer(options, app).listen(process.env.APP_PORT);
 }, err => {
     console.log('Connection to db failed: ' + err);
 });
@@ -66,7 +66,7 @@ http.createServer((req, res) => {
     res.end();
 }).listen(8080);
 
-//login
+/*//login
 app.post('/login',
     passport.authenticate('local', {
         successRedirect: '/',
@@ -75,7 +75,7 @@ app.post('/login',
 );
 app.get('/loginFailt', (req, res) => {
     res.send("login failt!");
-});
+});*/
 
 //send all the Data back
 app.get('/all', (req, res) => {
@@ -102,6 +102,12 @@ app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
 }));
+
+app.post('/login', (req, res) => {
+    userCon.checkUser(req.body).then((result) => {
+        res.sendStatus(result);
+    });
+});
 
 app.post('/submit-form', upload.single('image'), (req, res) => {
     console.log("/submit-form");
