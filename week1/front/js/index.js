@@ -25,6 +25,18 @@ app.controller('showCtrl', function($scope) {
         }
     };
 
+    $scope.login = function(id) {
+        const Http = new XMLHttpRequest();
+        const url='http://localhost:3000/login';
+        Http.open("POST", url);
+        Http.send({});
+        Http.onreadystatechange= (e)=>{
+            if(Http.status == 200){
+
+            }
+        };
+    };
+
     $scope.delete = function(id) {
         const Http = new XMLHttpRequest();
         const url='http://localhost:3000/delete/'+ id;
@@ -50,7 +62,6 @@ app.controller('showCtrl', function($scope) {
             }
         };
     };
-
 
     $scope.edit = function(id) {
         console.log(id);

@@ -16,13 +16,31 @@ const app = express();
 const https = require('https');
 const fs = require('fs');
 
-const sslkey = fs.readFileSync('ssl-key.pem');
-const sslcert = fs.readFileSync('ssl-cert.pem');
+app.enable('trust proxy');
+
+const sslkey = fs.readFileSync('ignore/ssl-key.pem');
+const sslcert = fs.readFileSync('ignore/ssl-cert.pem');
 
 const options = {
     key: sslkey,
     cert: sslcert
 };
+
+
+app.use(bodyParser.urlencoded({extended: true}));
+
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+passport.use(new LocalStrategy(
+    (username, password, done) => {
+        if (username !== process.env.username || password !== process.env.password) {
+            done(null, false, {message: 'Incorrect credentials.'});
+            return;
+        }
+        return done(null, {}); // returned object usally contains something to identify the user
+    }
+));
+app.use(passport.initialize());
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -47,6 +65,17 @@ http.createServer((req, res) => {
     res.writeHead(301, { 'Location': 'https://localhost:3000' + req.url });
     res.end();
 }).listen(8080);
+
+//login
+app.post('/login',
+    passport.authenticate('local', {
+        successRedirect: '/',
+        failureRedirect: '/loginFailt',
+        session: false })
+);
+app.get('/loginFailt', (req, res) => {
+    res.send("login failt!");
+});
 
 //send all the Data back
 app.get('/all', (req, res) => {
