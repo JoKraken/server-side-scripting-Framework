@@ -5,7 +5,7 @@ app.controller('showCtrl', function($scope) {
 
 
     const Http = new XMLHttpRequest();
-    const url = 'http://localhost:3000/all';
+    const url = '/all';
     Http.open("GET", url);
     Http.send();
     Http.onreadystatechange = (e) => {
@@ -25,7 +25,7 @@ app.controller('showCtrl', function($scope) {
 
     $scope.delete = function (id) {
         const Http = new XMLHttpRequest();
-        const url = 'http://localhost:3000/delete/' + id;
+        const url = '/delete/' + id;
         Http.open("DELETE", url);
         Http.send();
         Http.onreadystatechange = (e) => {

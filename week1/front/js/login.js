@@ -12,7 +12,7 @@ app.controller('loginCtrl', function($scope) {
 
     $scope.login = function() {
         const Http = new XMLHttpRequest();
-        const url='http://localhost:3000/login';
+        const url='/login';
         Http.open("POST", url, true);
         Http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         Http.send("name="+document.querySelector('#name').value+"&pwd="+document.querySelector('#pwd').value);
