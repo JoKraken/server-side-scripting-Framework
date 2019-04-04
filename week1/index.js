@@ -1,7 +1,22 @@
 'use strict';
+
+const https = require('https');
+const fs = require('fs');
+
+const sslkey = fs.readFileSync('ignore/ssl-key.pem');
+const sslcert = fs.readFileSync('ignore/ssl-cert.pem');
+
+const options = {
+    key: sslkey,
+    cert: sslcert
+};
+
 require('dotenv').config();
 
-const schema = require('./src/schema');
+const schema = require('./models/data');
+const dataCon = require('./controllers/dataController');
+const userCon = require('./controllers/userController');
+
 var multer = require('multer');
 var upload = multer({dest: 'front/uploads/'});
 const sharp = require('sharp');
@@ -11,7 +26,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const express = require('express');
 const app = express();
-const fs = require('fs');
+const http = express();
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -23,25 +38,42 @@ app.use(express.static('front'));
 
 mongoose.connect('mongodb://'+ process.env.DB_User +':'+ process.env.DB_PWD + '@'+ process.env.DB_HOST + ':' + process.env.DB_PORT + '/test').then(() => {
     console.log('Connected successfully.');
-    app.listen(process.env.APP_PORT);
+
+    http.use((req, res, next) =>{
+        if(req.secure){
+            next();
+        }else{
+            res.redirect('https://localhost:3001');
+        }
+    });
+
+
+    http.listen(process.env.APP_PORT);
+    https.createServer(options, app).listen(3001);
 }, err => {
     console.log('Connection to db failed: ' + err);
 });
 
+
 //send all the Data back
 app.get('/all', (req, res) => {
-    schema.Data.find().then(data => {
-        //console.log(data);
-        res.json(data);
+    dataCon.getAllData().then((result) => {
+        res.send(result);
     });
 });
 
-app.delete('/delete', function (req, res) {
-    schema.Data.remove({delete: false}, function (err) {
-        console.log();
-    });
-
-    res.sendStatus(200);
+app.delete('/delete/:id', function (req, res) {
+    let id = req.params.id;
+    console.log("id: "+id);
+    if(id == undefined){
+        dataCon.deletDataAll().then((result) => {
+            res.sendStatus(200);
+        });
+    }else{
+        dataCon.deletDataById(id).then((result) => {
+            res.sendStatus(200);
+        });
+    }
 });
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
@@ -49,32 +81,25 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
 }));
 
-app.post('/submit-form', upload.single('image'), (req, res) => {
-    //console.log(req.file);
-    var temp = req.body;
-
-    schema.Data.create({
-        category: temp.cato,
-        title: temp.title,
-        details: temp.des,
-        coordinates: {
-            lat: 0,
-            lng: 0
-        },
-        image: (req.file == undefined) ? "" : req.file.filename
-    }).then(post => {
-        //console.log(post);
-
-        if(req.file != undefined) {
-            sharp(req.file.path).resize(320,240).toFile("front/uploads/medium/"+req.file.filename).then(
-                (err, info) =>{
-                    //console.log(err);
-                    res.sendFile(__dirname + "/front/index.html");
-                }
-            );
-        };
-
-
+app.post('/login', (req, res) => {
+    userCon.checkUser(req.body).then((result) => {
+        res.sendStatus(result);
     });
-    //res.sendFile("/submit-form");
 });
+
+app.post('/submit-form', upload.single('image'), (req, res) => {
+    console.log("/submit-form");
+    dataCon.createData(req, res).then((result) => {
+        console.log(result);
+        res.sendFile(__dirname + result);
+    });
+});
+
+app.post('/editArticle/', upload.single('image'), (req, res) => {
+    console.log(req.query.id);
+    dataCon.editData(req, res).then((result) => {
+        console.log(__dirname);
+        res.sendFile(__dirname + result);
+    });
+});
+

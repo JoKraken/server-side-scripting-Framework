@@ -1,0 +1,11 @@
+
+.errorLogin{
+    float: right;
+    color: red;
+    display: none;
+}
+
+.marginRight{
+    margin-right: 5px;
+    max-width: 135px;
+}
