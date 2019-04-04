@@ -13,7 +13,8 @@ const dataSchema = new Data({
     thumbnail: { type: String, default: '' },
     image: { type: String, default: '' },
     original: { type: String, default: '' },
-    delete: { type: Boolean, default: false }
+    delete: { type: Boolean, default: false },
+    user_id: { type: String, default: '' }
 });
 
 const Model = mongoose.model('Test', dataSchema);
