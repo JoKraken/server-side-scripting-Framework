@@ -54,6 +54,7 @@ mongoose.connect('mongodb://'+ process.env.DB_User +':'+ process.env.DB_PWD + '@
     console.log('Connection to db failed: ' + err);
 });
 
+
 //send all the Data back
 app.get('/all', (req, res) => {
     dataCon.getAllData().then((result) => {
