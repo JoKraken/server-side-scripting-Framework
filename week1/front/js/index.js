@@ -7,7 +7,7 @@ app.controller('showCtrl', function($scope) {
 
 
     const Http = new XMLHttpRequest();
-    const url = '/all';
+    const url = '/all/'+localStorage.temp.split('"')[1];
     Http.open("GET", url);
     Http.send();
     Http.onreadystatechange = (e) => {

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const Data = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-const dataSchema = new Data({
+const dataSchema = new Schema({
     time: { type: Date, default: Date.now },
     category: { type: String, default: '' },
     title: { type: String, default: '' },
@@ -14,7 +14,7 @@ const dataSchema = new Data({
     image: { type: String, default: '' },
     original: { type: String, default: '' },
     delete: { type: Boolean, default: false },
-    user_id: { type: String, default: '' }
+    user_id: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
 const Model = mongoose.model('Test', dataSchema);

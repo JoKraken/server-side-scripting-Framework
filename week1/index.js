@@ -54,23 +54,24 @@ mongoose.connect('mongodb://'+ process.env.DB_User +':'+ process.env.DB_PWD + '@
     console.log('Connection to db failed: ' + err);
 });
 
-
-//send all the Data back
-app.get('/all', (req, res) => {
-    dataCon.getAllData().then((result) => {
+//send all the Data back by userID
+app.get('/all/:uid', (req, res) => {
+    //console.log(req.params.uid);
+    dataCon.getAllData(req.params.uid).then((result) => {
         res.send(result);
     });
 });
 
+// delete data by id
 app.delete('/delete/:id', function (req, res) {
     let id = req.params.id;
-    console.log("id: "+id);
+    //console.log("id: "+id);
     if(id == undefined){
-        dataCon.deletDataAll().then((result) => {
+        dataCon.deleteDataAll().then((result) => {
             res.sendStatus(200);
         });
     }else{
-        dataCon.deletDataById(id).then((result) => {
+        dataCon.deleteDataById(id).then((result) => {
             res.sendStatus(200);
         });
     }

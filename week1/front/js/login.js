@@ -25,6 +25,7 @@ app.controller('loginCtrl', function($scope) {
                 document.querySelector('#logedIn').style.display = "block";
                 document.querySelector('.errorLogin').style.display = "none";
                 document.querySelector('#loginForm').style.display = "none";
+                window.location.reload();
             } else{
                 console.log("not login");
                 localStorage.setItem("login", false);
@@ -38,8 +39,10 @@ app.controller('loginCtrl', function($scope) {
 
     $scope.logout = function() {
         localStorage.setItem("login", false);
+        localStorage.setItem("temp", undefined);
         document.querySelector('#logedIn').style.display = "none";
         document.querySelector('.errorLogin').style.display = "none";
         document.querySelector('#loginForm').style.display = "block";
+        window.location.reload();
     }
 });
