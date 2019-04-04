@@ -21,6 +21,7 @@ exports.deletDataById = (id) => {
 };
 
 exports.createData = (req, res) =>  {
+    console.log(req);
     return schema.Data.create({
         category: req.body.cato,
         title: req.body.title,
@@ -29,7 +30,8 @@ exports.createData = (req, res) =>  {
             lat: 0,
             lng: 0
         },
-        image: (req.file == undefined) ? "" : req.file.filename
+        image: (req.file == undefined) ? "" : req.file.filename,
+        user_id: req.body.uid
     }).then(post => {
         //console.log(post);
 

@@ -19,14 +19,16 @@ app.controller('loginCtrl', function($scope) {
         Http.onreadystatechange= (e)=>{
             console.log(Http.status);
             if(Http.status == 200){
-                console.log("login");
+                console.log("login: "+ Http.response);
                 localStorage.setItem("login", true);
+                localStorage.setItem("temp", Http.response);
                 document.querySelector('#logedIn').style.display = "block";
                 document.querySelector('.errorLogin').style.display = "none";
                 document.querySelector('#loginForm').style.display = "none";
             } else{
-                localStorage.setItem("login", false);
                 console.log("not login");
+                localStorage.setItem("login", false);
+                localStorage.setItem("temp", undefined);
                 document.querySelector('#logedIn').style.display = "none";
                 document.querySelector('.errorLogin').innerHTML = (Http.status == 404) ? "The password is wrong": "The username is wrong";
                 document.querySelector('.errorLogin').style.display = "block";
