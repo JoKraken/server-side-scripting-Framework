@@ -47,20 +47,20 @@ mongoose.connect('mongodb://'+ process.env.DB_User +':'+ process.env.DB_PWD + '@
         }
     });
 
-
     http.listen(process.env.APP_PORT);
     https.createServer(options, app).listen(3001);
 }, err => {
     console.log('Connection to db failed: ' + err);
 });
 
+/*
 //send all the Data back by userID
 app.get('/all/:uid', (req, res) => {
     //console.log(req.params.uid);
     dataCon.getAllData(req.params.uid).then((result) => {
         res.send(result);
     });
-});
+});*/
 
 // delete data by id
 app.delete('/delete/:id', function (req, res) {
@@ -91,7 +91,7 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/submit-form', upload.single('image'), (req, res) => {
-    console.log("/submit-form");
+    //console.log("/submit-form");
     dataCon.createData(req, res).then((result) => {
         console.log(result);
         res.sendFile(__dirname + result);
@@ -99,9 +99,9 @@ app.post('/submit-form', upload.single('image'), (req, res) => {
 });
 
 app.post('/editArticle/', upload.single('image'), (req, res) => {
-    console.log(req.query.id);
+    //console.log(req.query.id);
     dataCon.editData(req, res).then((result) => {
-        console.log(__dirname);
+        //console.log(__dirname);
         res.sendFile(__dirname + result);
     });
 });

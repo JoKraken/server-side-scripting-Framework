@@ -28,7 +28,7 @@ exports.deleteDataById = (id) => {
 };
 
 exports.createData = (req, res) =>  {
-    console.log(req);
+    //console.log(req);
     return schema.Data.create({
         category: req.body.cato,
         title: req.body.title,
