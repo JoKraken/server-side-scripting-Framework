@@ -2,10 +2,12 @@ app.controller('showCtrl', function($scope) {
     $scope.cato = [];
     $scope.all = [];
     $scope.data = [];
+    $scope.logedIn = (localStorage.login == "true") ? true : false;
+    console.log($scope.logedIn);
 
 
     const Http = new XMLHttpRequest();
-    const url = '/all';
+    const url = '/all/'+localStorage.temp.split('"')[1];
     Http.open("GET", url);
     Http.send();
     Http.onreadystatechange = (e) => {

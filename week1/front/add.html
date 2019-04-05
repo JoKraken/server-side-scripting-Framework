@@ -40,7 +40,8 @@
     </div>
     <div class="errorLogin"></div>
     <div class="tab-content" ng-controller="addCtrl">
-        <form method="POST" action="/submit-form" enctype="multipart/form-data" style="margin-top: 10px">
+        <div ng-hide="logedIn"> Please log in to add new content</div>
+        <form ng-show="logedIn" method="POST" action="/submit-form" enctype="multipart/form-data" style="margin-top: 10px">
             <div class="form-group">
                 <label for="cato">Catogory:</label>
                 <input type="text" class="form-control" name="cato" id="cato" placeholder="Enter catogory">
@@ -59,6 +60,7 @@
                 <input type="file" class="form-control-file" id="image" name="image" aria-describedby="imageHelp">
                 <small id="imageHelp" class="form-text text-muted">Add image</small>
             </div>
+            <input ng-hide="logedIn" type="text" class="form-control" name="uid" id="uid" value="">
 
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

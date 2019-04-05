@@ -1,26 +1,34 @@
 const schema = require('../models/data');
 const sharp = require('sharp');
 
-exports.getAllData = () => {
-    return schema.Data.find().then(data => {
-        return data;
-    });
+exports.getAllData = (uid) => {
+    //console.log("getAllData: "+uid);
+    if(uid == "undefined"){
+        return schema.Data.find().then(data => {
+            return data;
+        });
+    }else {
+        return schema.Data.find({user_id: uid}).then(data => {
+            return data;
+        });
+    }
 };
 
-exports.deletDataAll = (id) => {
+exports.deleteDataAll = (id) => {
     return schema.Data.remove({delete: false}, function (err) {
-        console.log("all deleted");
+        //console.log("all deleted");
         return 200;
     });
 };
 
-exports.deletDataById = (id) => {
+exports.deleteDataById = (id) => {
     return schema.Data.findByIdAndRemove(id, function (err) {
         return 200;
     });
 };
 
 exports.createData = (req, res) =>  {
+    //console.log(req);
     return schema.Data.create({
         category: req.body.cato,
         title: req.body.title,
@@ -29,7 +37,8 @@ exports.createData = (req, res) =>  {
             lat: 0,
             lng: 0
         },
-        image: (req.file == undefined) ? "" : req.file.filename
+        image: (req.file == undefined) ? "" : req.file.filename,
+        user_id: req.body.uid
     }).then(post => {
         //console.log(post);
 
